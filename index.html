@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 
 <html lang="ko">
@@ -7,13 +6,6 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>벨아미리노보 챗봇</title>
-        <!-- Open Graph / 링크 공유용 -->
-<meta property="og:type" content="website">
-<meta property="og:title" content="벨아미리노보 AI 상담 챗봇">
-<meta property="og:description" content="정직하고 신뢰할 수 있는 병원 시술 상담 AI 챗봇입니다. 2분 무료 상담 제공!">
-<meta property="og:url" content="https://min54.github.io/belami-frontend">
-<meta property="og:image" content="https://min54.github.io/belami-frontend/preview.png">
-<meta property="og:site_name" content="벨아미리노보">
 <style>
         body {
             font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
@@ -124,6 +116,18 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        .typing-dots {
+            display: inline-block;
+        }
+        .typing-dots::after {
+            content: '...';
+            animation: typing 1.5s infinite;
+        }
+        @keyframes typing {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
     </style>
 </head>
 <body>
@@ -179,7 +183,7 @@
             const loaderId = `loader-${Date.now()}`;
             chatBox.innerHTML += `
                 <div class="message bot" id="${loaderId}">
-                    <div class="message-bubble">...</div>
+                    <div class="message-bubble"><span class="typing-dots"></span></div>
                 </div>
             `;
             chatBox.scrollTop = chatBox.scrollHeight;
@@ -215,7 +219,7 @@
             }
         });
 
-        // ✅ 자동 종료 메시지 (2분 후)
+        // ✅ 자동 종료 메시지 (2분 후) - 완전 비활성화
         setTimeout(() => {
             const autoMsg = document.createElement("div");
             autoMsg.className = "message bot";
@@ -224,8 +228,19 @@
                 <div class="message-time">${getCurrentTime()}</div>
             `;
             chatBox.appendChild(autoMsg);
+            chatBox.scrollTop = chatBox.scrollHeight;
+            
+            // 완전 비활성화
             input.disabled = true;
             input.placeholder = "상담 시간이 종료되었습니다";
+            const submitButton = document.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            submitButton.style.backgroundColor = "#ccc";
+            submitButton.style.cursor = "not-allowed";
+            
+            // 폼 자체도 비활성화
+            form.style.pointerEvents = "none";
+            form.style.opacity = "0.6";
         }, 120000);
     
 });</script>
